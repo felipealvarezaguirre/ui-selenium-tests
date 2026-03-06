@@ -1,14 +1,20 @@
 pipeline {
     agent any
-    tools {
-        jdk 'jdk-21'
-        maven 'maven3'
-    }
     stages {
-        stage('Build'){
+        stage('Clone') {
             steps{
-                sh 'mvn clean package'
+                git 'https://github.com/felipealvarezaguirre/ui-selenium-tests.git'
             }
+        }
+        stage('Test') {
+            steps{
+                sh 'mvn clean test'
+            }
+        }
+    }
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
         }
     }
 }
