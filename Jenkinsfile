@@ -2,13 +2,17 @@ pipeline {
     agent any
     stages {
         stage('Clone') {
-            steps{
+            steps {
                 git 'https://github.com/felipealvarezaguirre/ui-selenium-tests.git'
             }
         }
-        stage('Test') {
-            steps{
-                sh 'mvn clean test'
+        stage('Test in Docker') {
+            steps {
+                script {
+                    docker.image('maven:3.9.9-eclipse-temurin-17').inside {
+                        sh 'mvn clean test'
+                    }
+                }
             }
         }
     }
